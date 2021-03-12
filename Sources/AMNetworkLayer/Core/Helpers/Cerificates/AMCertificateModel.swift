@@ -8,6 +8,8 @@ import Foundation
 
 public struct AMCertificateModel {
     
+    // MARK: - ExtensionType
+    /// The types of possible certification extension. Other accept any type.
     public enum ExtensionType {
         case cer
         case crt
@@ -24,14 +26,18 @@ public struct AMCertificateModel {
         }
     }
     
+    // MARK: - Properties
     var filename: String
     var fileExtension: ExtensionType
     
+    // MARK: - Initialization
     public init(filename: String, fileExtension: ExtensionType) {
         self.filename = filename
         self.fileExtension = fileExtension
     }
     
+    /// Convert the certificate model into a data. If there is any error in the certificate file, the app will crash... this is wanted since the sensitive topic of app security.
+    /// - Returns: The converted data
     func convertToData() -> Data {
         let certificateUrl = Bundle.main.url(forResource: filename, withExtension: fileExtension.getExtension())
         // WARNING: IF NIL MUST CRASH!!!

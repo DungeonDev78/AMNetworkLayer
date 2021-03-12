@@ -9,6 +9,7 @@ import Foundation
 
 extension Collection {
     
+    /// Convert any Swift Collection into a readable JSON String format
     public var jsonStringRepresentation: String {
         if #available(iOS 11.0, *) {
             

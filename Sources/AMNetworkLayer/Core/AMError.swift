@@ -7,7 +7,9 @@
 
 import Foundation
 
+/// The possible types of error of the layer. The case .customUser can be used to create a custom error if needed (ie.: used for specific errors of the used service provider)
 public enum AMError: Error {
+    
     case generic(code: Int? = nil)
     case reachability
     case timeOut
@@ -21,6 +23,7 @@ public enum AMError: Error {
 // MARK: - Error Messages
 extension AMError: LocalizedError {
     
+    /// Generic localized descriptions
     public var localizedDescription: String {
         switch self {
         case .generic(let code):
@@ -44,6 +47,7 @@ extension AMError: LocalizedError {
         }
     }
     
+    /// Generic recovery suggestions
     public var recoverySuggestion: String? {
         switch self {
         case .customUser(_, let recovery, _):

@@ -9,9 +9,15 @@ import Foundation
 
 class AMNetworkCertificateManager: NSObject {
     
+    // MARK: - Properties
     private var certificatesData: [Data]
     private var isEnabled: Bool
     
+    // MARK: - Initialization
+    /// The init of the certificate manager. It takes a list of certificates in the form of AMCertificateModel and a bool that states if the pinning is enabled or not. It can be useful to disable it in any desired environment
+    /// - Parameters:
+    ///   - certificates: an array of AMCertificateModel
+    ///   - isEnabled: the bool that activates the manager or not
     init(certificates: [AMCertificateModel], isEnabled: Bool) {
         self.certificatesData = certificates.map{ $0.convertToData() }
         self.isEnabled = isEnabled
@@ -26,11 +32,10 @@ extension AMNetworkCertificateManager: URLSessionDelegate {
                     didReceive challenge: URLAuthenticationChallenge,
                     completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
     
-       
+       // If not enabled, always secure connection
         if !isEnabled {
             if let trust = challenge.protectionSpace.serverTrust {
                 completionHandler(.performDefaultHandling, URLCredential(trust: trust))
-//                completionHandler(URLSession.AuthChallengeDisposition.useCredential, URLCredential(trust: trust))
                 return
             }
         }
