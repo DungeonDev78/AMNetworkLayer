@@ -8,19 +8,24 @@
 import Foundation
 
 extension Collection {
+        
+    private var collectionError: String {
+        "*** COLLECTION TO JSON ERROR ***"
+    }
     
     /// Convert any Swift Collection into a readable JSON String format
     public var jsonStringRepresentation: String {
         if #available(iOS 11.0, *) {
             
-            guard let theJSONData = try? JSONSerialization.data(withJSONObject: self,
-                                                                options: [.prettyPrinted, .sortedKeys]) else {
-                                                                    return "DICTIONARY TO JSON ERROR"
+            guard let theJSONData = try? JSONSerialization.data(
+                    withJSONObject: self,
+                    options: [.prettyPrinted, .sortedKeys]) else {
+                return collectionError
             }
             
-            return String(data: theJSONData, encoding: .ascii) ?? "DICTIONARY TO JSON ERROR"
+            return String(data: theJSONData, encoding: .ascii) ?? collectionError
         } else {
-            return "DICTIONARY TO JSON ERROR"
+            return collectionError
         }
     }
 }

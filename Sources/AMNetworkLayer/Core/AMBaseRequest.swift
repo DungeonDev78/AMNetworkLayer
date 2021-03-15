@@ -8,22 +8,32 @@
 import Foundation
 
 open class AMBaseRequest<Response> {
-    
+    // MARK: - Properties
     public var endpoint: String
-    
     public var params = [String: Any]()
     public var timeout = 60.0
     public var httpMethod: AMNetworkManager.HTTPMethodKind = .get
-    public var scheme: AMNetworkManager.SchemeKind = .https
+    
+    // Hold the infos of the contacted server
     public var serviceProvider: AMServiceProviderProtocol
+    
+    // Filename of the json mocked response
     public var mockedResponseFilename = "*** PLEASE INSERT FILENAME ***"
     
+    // MARK: - Initialization
     public init(serviceProvider: AMServiceProviderProtocol, endpoint: String) {
         self.serviceProvider = serviceProvider
         self.endpoint = endpoint
     }
+}
+
+// MARK: - Request Creation
+extension AMBaseRequest {
     
+    /// Create the URLRequest using all the available infos
+    /// - Returns: the created URLRequest
     func createURLRequest() -> URLRequest {
+        // MUST CRASH IF WRONG URL
         let url = createURL()!
         var urlrequest = URLRequest(url: url)
         urlrequest.httpMethod = httpMethod.rawValue
@@ -44,8 +54,11 @@ open class AMBaseRequest<Response> {
     }
 }
 
+// MARK: - Private
 private extension AMBaseRequest {
 
+    /// Create the URLusing all the available infos
+    /// - Returns: the created URL
     func createURL() -> URL? {
         var urlComponents = URLComponents()
         urlComponents.scheme = serviceProvider.getHTTPScheme().rawValue
@@ -67,10 +80,11 @@ private extension AMBaseRequest {
         return urlComponents.url
     }
     
+    /// Creates the query items from the params dictionary
+    /// - Returns: the list of query items
     func getQueryItems() -> [URLQueryItem]? {
         
         guard !params.isEmpty else { return nil }
-        
         var queryItems = [URLQueryItem]()
         for (key, value) in params {
             queryItems.append(URLQueryItem(name: key, value: "\(value)"))
@@ -79,6 +93,7 @@ private extension AMBaseRequest {
     }
 }
 
+// MARK: - Extension
 extension AMBaseRequest {
     
     var identifier: String {

@@ -9,6 +9,10 @@ import Foundation
 
 class AMNetworkLogger {
     
+    /// Create the full log (printed) of a request
+    /// - Parameters:
+    ///   - urlReqest: the URLRequest to log
+    ///   - request: the AMBaseRequest to log, needed for Params and the Endpoint
     static func logRequest<U: Codable>(_ urlReqest: URLRequest, request: AMBaseRequest<U>) {
         
         let title = request.endpoint.components(separatedBy: "/").last ?? "---"
@@ -18,11 +22,15 @@ class AMNetworkLogger {
         print("*** ENDPOINT: \(request.endpoint)")
         print("*** HTTP HEADERS:\(urlReqest.allHTTPHeaderFields?.jsonStringRepresentation ?? "---")")
         print("*** HTTP METHOD: \(urlReqest.httpMethod ?? "---")")
-        print("*** HTTP PARAMS: \(request.params.jsonStringRepresentation)")
+        print("*** PARAMS: \(request.params.jsonStringRepresentation)")
         print("*** REQUEST LOG ENDS HERE ***")
         print("***************************************************************\n")
     }
     
+    /// Create the full log (printed) of a response
+    /// - Parameters:
+    ///   - httpResponse: the HTTPURLResponse to log
+    ///   - responseData: the data of the response to log as JSON or String
     static func logResponse(_ httpResponse: HTTPURLResponse, responseData: Data?) {
         
         let title = httpResponse.url?.absoluteString.components(separatedBy: "/").last ?? "---"
@@ -30,7 +38,7 @@ class AMNetworkLogger {
         print("*** RESPONSE LOG STARTS HERE - \(title) ***")
         print("*** URL: \(httpResponse.url?.absoluteString ?? "---")")
         print("*** STATUS CODE: \(httpResponse.statusCode)")
-        print("*** HEADER:")
+        print("*** HEADERS:")
         print(httpResponse.allHeaderFields.jsonStringRepresentation)
         
         guard let gResponse = responseData else {
@@ -48,6 +56,8 @@ class AMNetworkLogger {
             if let jsonResponseDictionary = json as? [String: Any] {
                 print(jsonResponseDictionary.jsonStringRepresentation)
             }
+            
+        // In the case that we are expeting a simple string
         } else if let responseString = String(data: gResponse, encoding: String.Encoding.utf8) {
             print("\n*** STRING response:")
             print(responseString)
@@ -57,6 +67,7 @@ class AMNetworkLogger {
         print("***************************************************************\n")
     }
     
+    /// Print a moked warning
     static func mockedServiceLog() {
         print("\n**********************")
         print("***                ***")
