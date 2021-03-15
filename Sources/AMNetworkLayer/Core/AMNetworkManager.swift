@@ -54,7 +54,7 @@ public class AMNetworkManager: NSObject, AMInjectionReachabilityProtocol {
         request: T,
         completion: @escaping AMNetworkCompletionHandler<U?>) {
         
-        // MOCKED SERVICES
+        // Mocked services
         if areMocksEnabled {
             parseMockedResponse(request: request, completion: completion)
             return
