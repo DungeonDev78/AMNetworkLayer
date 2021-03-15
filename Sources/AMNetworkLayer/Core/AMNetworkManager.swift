@@ -50,8 +50,9 @@ public class AMNetworkManager: NSObject, AMInjectionReachabilityProtocol {
         session = URLSession.init(configuration: .ephemeral, delegate: certificateManager, delegateQueue: nil)
     }
     
-    public func performRequest<U: Codable, T: AMBaseRequest<U>>(request: T,
-                                                       completion: @escaping AMNetworkCompletionHandler<U?>) {
+    public func performRequest<U: Codable, T: AMBaseRequest<U>>(
+        request: T,
+        completion: @escaping AMNetworkCompletionHandler<U?>) {
         
         // MOCKED SERVICES
         if areMocksEnabled {
@@ -110,15 +111,16 @@ public class AMNetworkManager: NSObject, AMInjectionReachabilityProtocol {
                     return
                 }
                 
-                self?.finalizeResponse(data: gData, request: request, error: error) { result in
-                    completion(result)
-                }
+                self?.finalizeResponse(data: gData,
+                                       serviceProvider: request.serviceProvider,
+                                       error: error,
+                                       completion: { result in completion(result) })
+
             } else {
                 DispatchQueue.main.async {
                     completion(.failure(.generic()))
                 }
             }
-            
         })
         
         task.resume()
@@ -160,8 +162,10 @@ private extension AMNetworkManager {
         completion: @escaping AMNetworkCompletionHandler<U?>) {
         
         if let data = request.serviceProvider.getDataFrom(mockedResponseFilename: request.mockedResponseFilename) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + request.serviceProvider.mockedServiceTime) {
-                self.finalizeResponse(data: data, request: request, error: nil, completion: completion)
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + request.serviceProvider.mockedServiceTime) { [weak self] in
+                self?.finalizeResponse(data: data, serviceProvider: request.serviceProvider,
+                                       error: nil, completion: completion)
             }
         } else {
             DispatchQueue.main.async {
@@ -170,12 +174,11 @@ private extension AMNetworkManager {
         }
     }
     
-    func finalizeResponse<U: Codable, T: AMBaseRequest<U>>(data: Data,
-                                                         request: T,
-                                                         error: AMError?,
-                                                         completion: @escaping AMNetworkCompletionHandler<U?>) {
-                
-        request.serviceProvider.parseAndValidate(data, request: request, error: error) { result in
+    func finalizeResponse<U: Codable>(data: Data,
+                                      serviceProvider: AMServiceProviderProtocol,
+                                      error: AMError?,
+                                      completion: @escaping AMNetworkCompletionHandler<U?>) {
+        serviceProvider.parseAndValidate(data, responseType: U.self, error: error) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let response):

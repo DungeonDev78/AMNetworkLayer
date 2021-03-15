@@ -22,13 +22,13 @@ public protocol AMServiceProviderProtocol: Codable {
     /// Perform a parse and a validation of the response according to the rules of the server
     /// - Parameters:
     ///   - data: the raw data of the response
-    ///   - request: the original request, needed for the phantom type of the response type
+    ///   - responseType: the generic of the response
     ///   - error: the possible general error of the given service
     ///   - completion: the completion handler
-    func parseAndValidate<U: Codable, T: AMBaseRequest<U>>(_ data: Data,
-                                                      request: T,
-                                                      error: AMError?,
-                                                      completion: @escaping AMNetworkCompletionHandler<U>)
+    func parseAndValidate<U: Codable>(_ data: Data,
+                                      responseType: U.Type,
+                                      error: AMError?,
+                                      completion: @escaping AMNetworkCompletionHandler<U>)
 }
 
 // MARK: - Mocking stuff
