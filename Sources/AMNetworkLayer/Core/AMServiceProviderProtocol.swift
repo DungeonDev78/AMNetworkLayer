@@ -11,11 +11,11 @@ import Foundation
 public protocol AMServiceProviderProtocol: Codable {
     
     /// It's the url host of the service provider. Could be different accodfing to different environments.
-    /// If nededed implement an enum with the possible options.
+    /// If nededed implement an enum with the possible options using a computed var for host
     var host: String { get }
     
     /// It's the  HTTP Scheme of the service provider. Could be different according to different environments.
-    /// If nededed implement an enum with the possible options.
+    /// If nededed implement an enum with the possible options using a computed var for httpScheme
     var httpScheme: AMNetworkManager.SchemeKind { get }
     
     /// Create the HTTP Headers of the service provider according to the rules of the server
