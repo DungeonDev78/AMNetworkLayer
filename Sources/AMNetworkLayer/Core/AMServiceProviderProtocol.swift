@@ -10,10 +10,12 @@ import Foundation
 // MARK: - AMServiceProviderProtocol
 public protocol AMServiceProviderProtocol: Codable {
     
-    /// Get the host of the service provider. Could be different accorfing to different environments; implement an enum with the possible options.
+    /// It's the url host of the service provider. Could be different accodfing to different environments.
+    /// If nededed implement an enum with the possible options.
     var host: String { get }
     
-    /// Get the HTTP Scheme of the service provider. Could be different accorfing to different environments; implement an enum with the possible options.
+    /// It's the  HTTP Scheme of the service provider. Could be different according to different environments.
+    /// If nededed implement an enum with the possible options.
     var httpScheme: AMNetworkManager.SchemeKind { get }
     
     /// Create the HTTP Headers of the service provider according to the rules of the server
