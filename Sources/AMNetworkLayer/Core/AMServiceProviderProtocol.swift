@@ -11,13 +11,13 @@ import Foundation
 public protocol AMServiceProviderProtocol: Codable {
     
     /// Get the host of the service provider. Could be different accorfing to different environments; implement an enum with the possible options.
-    func getHost() -> String
+    var host: String { get }
     
     /// Get the HTTP Scheme of the service provider. Could be different accorfing to different environments; implement an enum with the possible options.
-    func getHTTPScheme() -> AMNetworkManager.SchemeKind
+    var httpScheme: AMNetworkManager.SchemeKind { get }
     
-    /// Create the HTTP Header of the service provider according to the rules of the server
-    func createHTTPHeader() -> [String: String]
+    /// Create the HTTP Headers of the service provider according to the rules of the server
+    func createHTTPHeaders() -> [String: String]
     
     /// Perform a parse and a validation of the response according to the rules of the server
     /// - Parameters:

@@ -46,7 +46,7 @@ extension AMBaseRequest {
         default: break
         }
         
-        for (key, value) in serviceProvider.createHTTPHeader() {
+        for (key, value) in serviceProvider.createHTTPHeaders() {
             urlrequest.setValue(value, forHTTPHeaderField: key)
         }
         
@@ -61,8 +61,8 @@ private extension AMBaseRequest {
     /// - Returns: the created URL
     func createURL() -> URL? {
         var urlComponents = URLComponents()
-        urlComponents.scheme = serviceProvider.getHTTPScheme().rawValue
-        urlComponents.host = serviceProvider.getHost()
+        urlComponents.scheme = serviceProvider.httpScheme.rawValue
+        urlComponents.host = serviceProvider.host
         urlComponents.path = endpoint
         switch httpMethod {
         case .get:
