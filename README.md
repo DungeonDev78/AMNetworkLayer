@@ -28,44 +28,35 @@ In order to perform a REST service, all you have to do is create the three main 
 Let's see the details of every components.
 
 ### Service provider
-It needs to confrom the AMServiceProviderProtocol.
+The first piece of the puzzle is the Service Provider. It describes all the "behaviour" of the backend that we are going to contact.
+Every server has its own rules for the creation of the Http Headers, parsing and response validation, url to contact, etc... so you will have to create an object that conforms to the **AMServiceProviderProtocol**:
 ```swift
-import AMNetworkLayer
-
-class SWAPIServiceProvider: AMServiceProviderProtocol {
-
-    func getHost() -> String {
-        "swapi.dev"
-    }
+public protocol AMServiceProviderProtocol: Codable {
     
-    func getHTTPScheme() -> AMNetworkManager.SchemeKind {
-        .https
-    }
+    /// Get the host of the service provider. Could be different accorfing to different environments; implement an enum with the possible options.
+    func getHost() -> String
     
-    func createHTTPHeader() -> [String : String] {
-        ["Content-Type" : "application/json"]
-    }
+    /// Get the HTTP Scheme of the service provider. Could be different accorfing to different environments; implement an enum with the possible options.
+    func getHTTPScheme() -> AMNetworkManager.SchemeKind
     
-    func parseAndValidate<U>(
-        _ data: Data,
-        responseType: U.Type,
-        error: AMError?,
-        completion: @escaping AMNetworkCompletionHandler<U>) where U : Codable {
-        
-        if let error = error {
-            completion(.failure(error))
-            return
-        }
-        
-        if let parsedObject = try? JSONDecoder().decode(U.self, from: data) {
-            completion(.success(parsedObject))
-            return
-        }
-        
-        completion(.failure(.serialization))
-    }
+    /// Create the HTTP Header of the service provider according to the rules of the server
+    func createHTTPHeader() -> [String: String]
+    
+    /// Perform a parse and a validation of the response according to the rules of the server
+    /// - Parameters:
+    ///   - data: the raw data of the response
+    ///   - responseType: the generic of the response
+    ///   - error: the possible general error of the given service
+    ///   - completion: the completion handler
+    func parseAndValidate<U: Codable>(_ data: Data,
+                                      responseType: U.Type,
+                                      error: AMError?,
+                                      completion: @escaping AMNetworkCompletionHandler<U>)
 }
 ```
+
+With this approach your App will be able to request datas from different servers. Just create the provider, give it to the request (see later) and it's done!
+
 
 ### Request model
 
@@ -110,6 +101,49 @@ struct SWAPIGetPeopleRsponse: Codable {
 ```
 
 ## Putting it all together
+
+**Service Provider**
+```swift
+import AMNetworkLayer
+
+class SWAPIServiceProvider: AMServiceProviderProtocol {
+
+    func getHost() -> String {
+        "swapi.dev"
+    }
+    
+    func getHTTPScheme() -> AMNetworkManager.SchemeKind {
+        .https
+    }
+    
+    func createHTTPHeader() -> [String : String] {
+        ["Content-Type" : "application/json"]
+    }
+    
+    func parseAndValidate<U>(
+        _ data: Data,
+        responseType: U.Type,
+        error: AMError?,
+        completion: @escaping AMNetworkCompletionHandler<U>) where U : Codable {
+        
+        if let error = error {
+            completion(.failure(error))
+            return
+        }
+        
+        if let parsedObject = try? JSONDecoder().decode(U.self, from: data) {
+            completion(.success(parsedObject))
+            return
+        }
+        
+        completion(.failure(.serialization))
+    }
+}
+```
+
+
+
+
 ```swift
 import AMNetworkLayer
 
