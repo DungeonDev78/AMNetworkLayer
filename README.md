@@ -33,14 +33,16 @@ Every server has its own rules for the creation of the Http Headers, parsing and
 ```swift
 public protocol AMServiceProviderProtocol: Codable {
     
-    /// Get the host of the service provider. Could be different accorfing to different environments; implement an enum with the possible options.
-    func getHost() -> String
+    /// It's the url host of the service provider. Could be different according to different environments for example.
+    /// If nededed implement an enum with the possible options using a computed var for host
+    var host: String { get }
     
-    /// Get the HTTP Scheme of the service provider. Could be different accorfing to different environments; implement an enum with the possible options.
-    func getHTTPScheme() -> AMNetworkManager.SchemeKind
+    /// It's the  HTTP Scheme of the service provider. Could be different according to different environments for example.
+    /// If nededed implement an enum with the possible options using a computed var for httpScheme
+    var httpScheme: AMNetworkManager.SchemeKind { get }
     
-    /// Create the HTTP Header of the service provider according to the rules of the server
-    func createHTTPHeader() -> [String: String]
+    /// Create the HTTP Headers of the service provider according to the rules of the server
+    func createHTTPHeaders() -> [String: String]
     
     /// Perform a parse and a validation of the response according to the rules of the server
     /// - Parameters:
@@ -108,15 +110,10 @@ import AMNetworkLayer
 
 class SWAPIServiceProvider: AMServiceProviderProtocol {
 
-    func getHost() -> String {
-        "swapi.dev"
-    }
+    var host: String = "swapi.dev"
+    var httpScheme: AMNetworkManager.SchemeKind = .https
     
-    func getHTTPScheme() -> AMNetworkManager.SchemeKind {
-        .https
-    }
-    
-    func createHTTPHeader() -> [String : String] {
+    func createHTTPHeaders() -> [String : String] {
         ["Content-Type" : "application/json"]
     }
     
