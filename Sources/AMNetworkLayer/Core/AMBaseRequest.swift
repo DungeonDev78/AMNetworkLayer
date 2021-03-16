@@ -7,6 +7,8 @@
 
 import Foundation
 
+/// Create a request class inherited from this object.
+/// Must use the Phantom Type to specify the type of the response.
 open class AMBaseRequest<Response> {
     // MARK: - Properties
     public var endpoint: String
