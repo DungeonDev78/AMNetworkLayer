@@ -23,7 +23,7 @@ Requirements:
 In order to perform a REST service, all you have to do is create the three main components needed by this library:
  1. **Service Provider**
  2. **Request Class**
- 3. **Response model**
+ 3. **Response Object**
 
 Let's see the details of every components.
 
@@ -87,7 +87,7 @@ open class AMBaseRequest<Response> {
 }
 ```
 
-### Response model
+### Response Object
 It needs to confrom the Codable protocol.
 ```swift
 struct SWAPIGetPeopleRsponse: Codable {
@@ -148,8 +148,16 @@ class SWAPIServiceProvider: AMServiceProviderProtocol {
     }
 }
 ```
-
-
+```swift
+class SWAPIGetPeopleRequest: AMBaseRequest<SWAPIGetPeopleRsponse> {
+    
+    init(peopleId: Int) {
+        let path = "/api/people/\(peopleId)"
+        
+        super.init(serviceProvider: SWAPIServiceProvider(), endpoint: path)
+    }
+}
+```
 
 
 ```swift
