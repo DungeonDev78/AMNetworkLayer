@@ -22,12 +22,12 @@ Requirements:
 
 In order to perform a REST service, all you have to do is create the three main components needed by this library:
  1. **Service Provider**
- 2. **Request model**
+ 2. **Request Class**
  3. **Response model**
 
 Let's see the details of every components.
 
-### Service provider
+### Service Provider
 The first piece of the puzzle is the Service Provider. It describes all the "behaviour" of the backend that we are going to contact.
 Every server has its own rules for the creation of the Http Headers, parsing and response validation, url to contact, etc... so you will have to create an object that conforms to the **AMServiceProviderProtocol**:
 ```swift
@@ -60,18 +60,29 @@ public protocol AMServiceProviderProtocol: Codable {
 With this approach your App will be able to request datas from different servers. Just create the provider, give it to the request (see later) and it's done!
 
 
-### Request model
-
-It needs to confrom the AMBaseRequest and use the phantom type to specify the expected response type of the service.
+### Request Class
+The second piece of the puzzle is the Request Class.
+It needs to inherit from the AMBaseRequest and use the phantom type to specify the expected response type of the service.
 ```swift
-import AMNetworkLayer
-
-class SWAPIGetPeopleRequest: AMBaseRequest<SWAPIGetPeopleRsponse> {
+/// Create a request class inherited from this object.
+/// Must use the Phantom Type to specify the type of the response.
+open class AMBaseRequest<Response> {
+    // MARK: - Properties
+    public var endpoint: String
+    public var params = [String: Any]()
+    public var timeout = 60.0
+    public var httpMethod: AMNetworkManager.HTTPMethodKind = .get
     
-    init(peopleId: Int) {
-        let path = "/api/people/\(peopleId)"
-        
-        super.init(serviceProvider: SWAPIServiceProvider(), endpoint: path)
+    // Hold the infos of the contacted server
+    public var serviceProvider: AMServiceProviderProtocol
+    
+    // Filename of the json mocked response
+    public var mockedResponseFilename = "*** PLEASE INSERT FILENAME ***"
+    
+    // MARK: - Initialization
+    public init(serviceProvider: AMServiceProviderProtocol, endpoint: String) {
+        self.serviceProvider = serviceProvider
+        self.endpoint = endpoint
     }
 }
 ```
