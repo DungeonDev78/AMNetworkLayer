@@ -94,26 +94,27 @@ If you plan to use the *mock mode* of the library, you have to specify the *mock
 It is an object that needs only to conform the **Codable** protocol.
 
 ## Putting it all together
+Let's create a small example to download musif info from iTunes Database
 
 **Service Provider**
 ```swift
+import Foundation
 import AMNetworkLayer
 
-class SWAPIServiceProvider: AMServiceProviderProtocol {
-
-    var host: String = "swapi.dev"
+class ITunesServiceProvider: AMServiceProviderProtocol {
+    
+    var host = "itunes.apple.com"
     var httpScheme: AMNetworkManager.SchemeKind = .https
     
     func createHTTPHeaders() -> [String : String] {
         ["Content-Type" : "application/json"]
     }
     
-    func parseAndValidate<U>(
-        _ data: Data,
-        responseType: U.Type,
-        error: AMError?,
-        completion: @escaping AMNetworkCompletionHandler<U>) where U : Codable {
-        
+    func parseAndValidate<U>(_ data: Data,
+                             responseType: U.Type,
+                             error: AMError?,
+                             completion: @escaping AMNetworkCompletionHandler<U>) where U : Codable {
+                             
         if let error = error {
             completion(.failure(error))
             return
@@ -128,19 +129,68 @@ class SWAPIServiceProvider: AMServiceProviderProtocol {
     }
 }
 ```
+
+**Request Class**
 ```swift
-class SWAPIGetPeopleRequest: AMBaseRequest<SWAPIGetPeopleRsponse> {
+import Foundation
+import AMNetworkLayer
+
+class ITunesSearchRequest: AMBaseRequest<ITunesSearchResponse> {
     
-    init(peopleId: Int) {
-        let path = "/api/people/\(peopleId)"
-        
-        super.init(serviceProvider: SWAPIServiceProvider(), endpoint: path)
+    init(artist: String, limit: Int) {
+        super.init(serviceProvider: ITunesServiceProvider(), endpoint: "/search")
+        params = ["term": artist,
+                  "limit": limit]
+        mockedResponseFilename = "ITunesSearchMockedResponse"
     }
 }
 ```
-
-
+**Response Object**
 ```swift
+import Foundation
+
+struct ITunesSearchResponse: Codable {
+    let resultCount: Int?
+    let results: [ITunesArtistResult]?
+}
+
+struct ITunesArtistResult: Codable {
+    let artistName: String?
+    let collectionName: String?
+    let collectionPrice: Double?
+    let isStreamable: Bool?
+}
+```
+
+**Mocked Json**
+```json
+{
+    "resultCount": 3,
+    "results": [{
+            "collectionPrice": 9.9900000000000002,
+            "collectionName": "Octavarium",
+            "artistName": "Dream Theater",
+            "isStreamable": true
+        },
+        {
+            "collectionPrice": 9.9900000000000002,
+            "collectionName": "Images and Words",
+            "artistName": "Dream Theater",
+            "isStreamable": true
+        },
+        {
+            "collectionPrice": 9.9900000000000002,
+            "collectionName": "Octavarium",
+            "artistName": "Dream Theater",
+            "isStreamable": true
+        }
+    ]
+}
+```
+
+**ViewController*
+```swift
+import UIKit
 import AMNetworkLayer
 
 class ViewController: UIViewController {
@@ -148,11 +198,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let request = SWAPIGetPeopleRequest(peopleId: 1)
+        let request = ITunesSearchRequest(artist: "Dream Theater", limit: 3)
         AMNetworkManager.shared.performRequest(request: request) { (result) in
             switch result {
             case .success(let response):
-                print(response?.description ?? "---")
+                print(response?.resultCount ?? 0)
             case .failure(let error):
                 print(error.localizedDescription)
                 print(error.recoverySuggestion ?? "")
