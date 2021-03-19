@@ -86,32 +86,12 @@ open class AMBaseRequest<Response> {
     }
 }
 ```
+As you can see the *params*, *timeout* and *httpMethod* have already a default standard value.
+
+If you plan to use the *mock mode* of the library, you have to specify the *mockedResponseFilename* of the json file of the response.
 
 ### Response Object
-It needs to confrom the Codable protocol.
-```swift
-struct SWAPIGetPeopleRsponse: Codable {
-    
-    let name: String?
-    let height: String?
-    let mass: String?
-    let gender: String?
-    let homeworld: String?
-    
-    var description: String {
-"""
-************************************************
-* Name: \(name ?? "---")
-* Height: \(height ?? "---") cm
-* Mass: \(mass ?? "---") kg
-* Gender: \(gender?.capitalized ?? "---")
-* Homeworld: \(homeworld ?? "---")
-************************************************
-
-"""
-    }
-}
-```
+It is an object that needs only to conform the **Codable** protocol.
 
 ## Putting it all together
 
@@ -183,6 +163,18 @@ class ViewController: UIViewController {
 ```
 
 ## Advanced Usage
+TBD
+
+### Mock Mode
+TBD
+
+### Logs
+TBD
+
+### Certificate Pinning
+TBD
+
+## Tips'n'Tricks
 TBD
 
 ## Author
