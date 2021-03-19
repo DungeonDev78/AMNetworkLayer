@@ -188,7 +188,7 @@ struct ITunesArtistResult: Codable {
 }
 ```
 
-**ViewController*
+**ViewController**
 ```swift
 import UIKit
 import AMNetworkLayer
