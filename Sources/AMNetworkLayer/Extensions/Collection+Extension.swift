@@ -13,7 +13,7 @@ extension Collection {
         "*** COLLECTION TO JSON ERROR ***"
     }
     
-    /// Convert any Swift Collection into a readable JSON String format
+    /// Convert any Dictionary into a readable JSON String format
     public var jsonStringRepresentation: String {
         if #available(iOS 11.0, *) {
             
