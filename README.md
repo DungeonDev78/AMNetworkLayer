@@ -33,11 +33,13 @@ Every server has its own rules for the creation of the Http Headers, parsing and
 ```swift
 public protocol AMServiceProviderProtocol: Codable {
     
-    /// It's the url host of the service provider. Could be different according to different environments for example.
+    /// It's the url host of the service provider. 
+    /// Could be different according to different environments for example.
     /// If nededed implement an enum with the possible options using a computed var for host
     var host: String { get }
     
-    /// It's the  HTTP Scheme of the service provider. Could be different according to different environments for example.
+    /// It's the  HTTP Scheme of the service provider. 
+    /// Could be different according to different environments for example.
     /// If nededed implement an enum with the possible options using a computed var for httpScheme
     var httpScheme: AMNetworkManager.SchemeKind { get }
     
@@ -220,6 +222,7 @@ In this section wou will find additional info for an andavced use of the AMNetwo
 
 **Note**: if you have red the documentation and you have already tried some services, you'll have noticed that you can use indifferently the two forms **AMNetworkManager.shared** or the shortest **AMNet**.
 
+
 ### Logs
 In the development phase of an app it's always a good thing to have all the logs under control. Of course the AMNetworkLayer is already *log-enabled*.
 In the release phase of an app it's always a good thing to disable all the logs. Needless to say that the AMNetworkLayer is already *log-disabled-ready*.
@@ -231,6 +234,7 @@ AMNet.isVerbose = true  // Enable all logs
 ```
 
 By default this value is set to **true**.
+
 
 ### Mock Mode
 During the development phase of an app, your back-end server could be down for many reasons but you still have to work on your application. In this eventuality a mock mode of your services would be helpful. Of course AMNetworkLayer has it.
@@ -249,6 +253,31 @@ Activate the mocks with the command:
 AMNet.areMocksEnabled = true
 ```
 You will notice a different log, if enabled, for the services.
+
+
+### Errors
+AMNetworkLayer comes in with a standard error handling system.
+If a problem will arise an **AMNetError** will be created. AMNetError is an enum conforming the Error and LocalizedError protocols.
+A standard set of errors is given:
+```swift
+public enum AMNetError: Error {
+    
+    case generic(code: Int? = nil)
+    case reachability
+    case timeOut
+    case invalidCertificate
+    case serialization
+    case notFound
+    case unauthorizedAccess
+    case customUser(description: String, recovery: String = "", code: Int?)
+}
+```
+
+Should you need to create a specific error, maybe your server has specific rules, use the case:
+```swift
+    case customUser(description: String, recovery: String = "", code: Int?)
+```
+
 
 
 ### Certificate Pinning
