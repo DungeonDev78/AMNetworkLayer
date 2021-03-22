@@ -404,7 +404,7 @@ func parseAndValidate<U>(_ data: Data,
         }
         
         completion(.failure(.serialization))
-    }
+}
 ```
 
 
