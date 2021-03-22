@@ -7,7 +7,8 @@
 
 import Foundation
 
-/// The possible types of error of the layer. The case .customUser can be used to create a custom error if needed (ie.: used for specific errors of the used service provider)
+/// The possible types of error of the layer. The case .customUser can be used to create
+/// a custom error if needed (ie.: used for specific errors of the used service provider)
 public enum AMError: Error {
     
     case generic(code: Int? = nil)
