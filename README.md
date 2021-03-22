@@ -70,6 +70,7 @@ open class AMBaseRequest<Response> {
     // MARK: - Properties
     public var endpoint: String
     public var params = [String: Any]()
+    public var additionalHeaders = [String: String]()
     public var timeout = 60.0
     public var httpMethod: AMNetworkManager.HTTPMethodKind = .get
     
@@ -86,7 +87,9 @@ open class AMBaseRequest<Response> {
     }
 }
 ```
-As you can see the *params*, *timeout* and *httpMethod* have already a default standard value.
+As you can see the *params*, *additionalHeaders*, *timeout* and *httpMethod* have already a default standard value.
+
+Sometimes you will need to add specific headers for a request; well it's needless to say that you could use the property *additionalHeaders* of the request. The dictionary of this variable will be added alongside the one provided in the *Service Provider* object.
 
 If you plan to use the *mock mode* of the library, you have to specify the *mockedResponseFilename* of the json file of the response.
 
@@ -213,7 +216,7 @@ class ViewController: UIViewController {
 ```
 
 ## Advanced Usage
-TBD
+In this section wou will find additional info for an andavced use of the AMNetworkLayer library.
 
 ### Mock Mode
 TBD
