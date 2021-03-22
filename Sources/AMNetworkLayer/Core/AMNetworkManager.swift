@@ -7,7 +7,7 @@
 
 import Foundation
 
-public typealias AMNetworkCompletionHandler<U: Codable> = (Result<U, AMError>) -> Void
+public typealias AMNetworkCompletionHandler<U: Codable> = (Result<U, AMNetError>) -> Void
 
 public protocol AMInjectionReachabilityProtocol {
     func isReachable(urlString: String) -> Bool
@@ -91,7 +91,7 @@ public class AMNetworkManager: NSObject, AMInjectionReachabilityProtocol {
             
             if let httpResponse = response as? HTTPURLResponse {
                 
-                var error: AMError?
+                var error: AMNetError?
             
                 if self?.isVerbose == true {
                     AMNetworkLogger.logResponse(httpResponse, responseData: data)
@@ -101,13 +101,13 @@ public class AMNetworkManager: NSObject, AMInjectionReachabilityProtocol {
                 case 200...299:
                     break
                 case 401:
-                    error = AMError.unauthorizedAccess
+                    error = AMNetError.unauthorizedAccess
                 case 404:
-                    error = AMError.notFound
+                    error = AMNetError.notFound
                 case 500:
-                    error = AMError.generic()
+                    error = AMNetError.generic()
                 default:
-                    error = AMError.generic(code: httpResponse.statusCode)
+                    error = AMNetError.generic(code: httpResponse.statusCode)
                 }
                 
                 guard let gData = data else {
@@ -182,7 +182,7 @@ private extension AMNetworkManager {
     
     func finalizeResponse<U: Codable>(data: Data,
                                       serviceProvider: AMServiceProviderProtocol,
-                                      error: AMError?,
+                                      error: AMNetError?,
                                       completion: @escaping AMNetworkCompletionHandler<U?>) {
         serviceProvider.parseAndValidate(data, responseType: U.self, error: error) { result in
             DispatchQueue.main.async {

@@ -31,7 +31,7 @@ public protocol AMServiceProviderProtocol: Codable {
     ///   - completion: the completion handler
     func parseAndValidate<U: Codable>(_ data: Data,
                                       responseType: U.Type,
-                                      error: AMError?,
+                                      error: AMNetError?,
                                       completion: @escaping AMNetworkCompletionHandler<U>)
 }
 

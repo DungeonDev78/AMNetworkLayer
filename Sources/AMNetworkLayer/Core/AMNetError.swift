@@ -1,5 +1,5 @@
 //
-//  AMError.swift
+//  AMNetError.swift
 //  AMNetworkLayer
 //
 //  Created by Alessandro Manilii on 11/03/2021.
@@ -9,7 +9,7 @@ import Foundation
 
 /// The possible types of error of the layer. The case .customUser can be used to create
 /// a custom error if needed (ie.: used for specific errors of the used service provider)
-public enum AMError: Error {
+public enum AMNetError: Error {
     
     case generic(code: Int? = nil)
     case reachability
@@ -22,7 +22,7 @@ public enum AMError: Error {
 }
 
 // MARK: - Error Messages
-extension AMError: LocalizedError {
+extension AMNetError: LocalizedError {
     
     /// Generic localized descriptions
     public var localizedDescription: String {
