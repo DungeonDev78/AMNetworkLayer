@@ -275,7 +275,14 @@ public enum AMNetError: Error {
 
 Should you need to create a specific error, maybe your server has specific rules, use the case:
 ```swift
-    case customUser(description: String, recovery: String = "", code: Int?)
+case customUser(description: String, recovery: String = "", code: Int?)
+```
+
+Example:
+```swift
+AMNetError.customUser(description: "User deleted",
+                         recovery: "Please contact an admin",
+                             code: 666)                                
 ```
 
 
