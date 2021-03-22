@@ -233,7 +233,23 @@ AMNet.isVerbose = true  // Enable all logs
 By default this value is set to **true**.
 
 ### Mock Mode
-TBD
+During the development phase of an app, your back-end server could be down for many reasons but you still have to work on your application. In this eventuality a mock mode of your services would be helpful. Of course AMNetworkLayer has it.
+
+In order to use it you need to follow these semple steps:
+
+Create a JSON file with the expected response and add it on your project. When you create the file in Xcode, or you are importing it in your project, please **be sure to add it to your Target** otherwise the file will not be found and an assertion will arise at runtime.
+
+Add the name of the file in your request in the *mockedResponseFilename* property. Do not add the .json extension here.
+```swift
+mockedResponseFilename = "MyJsonFileMockedResponse"
+```
+
+Activate the mocks with the command:
+```swift
+AMNet.areMocksEnabled = true
+```
+You will notice a different log, if enabled, for the services.
+
 
 ### Certificate Pinning
 TBD
