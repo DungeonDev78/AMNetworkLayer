@@ -56,12 +56,16 @@ public class AMNetworkManager: NSObject, AMInjectionReachabilityProtocol {
         
         // Mocked services
         if areMocksEnabled {
+            // Print log if wanted
+            if isVerbose { AMNetworkLogger.mockedServiceLog() }
+            
             parseMockedResponse(request: request, completion: completion)
             return
         }
         
         let urlRequest = request.createURLRequest()
 
+        // Print request log if wanted
         if isVerbose {
             AMNetworkLogger.logRequest(urlRequest, request: request)
         }
