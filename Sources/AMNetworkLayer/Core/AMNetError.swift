@@ -19,6 +19,8 @@ public enum AMNetError: Error {
     case notFound
     case unauthorizedAccess
     case customUser(description: String, recovery: String = "", code: Int?)
+    
+    public init() { }
 }
 
 // MARK: - Error Messages
