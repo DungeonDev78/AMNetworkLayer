@@ -344,6 +344,7 @@ class ITunesServiceProvider: AMServiceProviderProtocol {
     }
     
     ...
+}
 ```
 
 And upgrade your request:
@@ -357,11 +358,55 @@ class ITunesSearchRequest: AMBaseRequest<ITunesSearchResponse> {
         params = ["term": artist, "limit": limit]
         mockedResponseFilename = "ITunesSearchMockedResponse"
     }
+
 }
 ```
 
 ### Custom Validation Rules
-TBD
+Some servers will need custom validation rules for the response. In that case maybe a protocol could be helpful:
+
+```swift
+import Foundation
+
+protocol ITunesSearchResponseProtocol {
+    var resultCount: Int? { get }
+}
+
+struct ITunesSearchResponse: Codable, ITunesSearchResponseProtocol {
+    let resultCount: Int?
+    let results: [ITunesArtistResult]?
+}
+```
+
+And then change the omplementation of your Service Provider Protocol:
+```swift
+func parseAndValidate<U>(_ data: Data,
+                             responseType: U.Type,
+                             error: AMNetError?,
+                             completion: @escaping AMNetworkCompletionHandler<U>) where U : Codable {
+        if let error = error {
+            completion(.failure(error))
+            return
+        }
+
+        if let parsedObject = try? JSONDecoder().decode(U.self, from: data) {
+            
+            if let parsedResponse = parsedObject as? ITunesSearchResponseProtocol,
+               parsedResponse.resultCount ?? 0 < 20 {
+                let error = AMNetError.customUser(description: "Too few items",
+                                               recovery: "Search again please...", code: 777)
+                    completion(.failure(error))
+                    return
+            }
+            
+            completion(.success(parsedObject))
+            return
+        }
+        
+        completion(.failure(.serialization))
+    }
+```
+
 
 ## Author
 
