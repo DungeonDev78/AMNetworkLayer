@@ -13,6 +13,8 @@ public protocol AMInjectionReachabilityProtocol {
     func isReachable(urlString: String) -> Bool
 }
 
+let AMNet = AMNetworkManager.shared
+
 public class AMNetworkManager: NSObject, AMInjectionReachabilityProtocol {
     
     public enum HTTPMethodKind: String, Codable {
