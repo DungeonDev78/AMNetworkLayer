@@ -308,6 +308,59 @@ Sometimes you will need to disable the pinning, maybe your server do not support
 
 
 ## Tips'n'Tricks
+
+### Environments
+With AMNetworkLayer you can esaly handle multi environments.
+
+Create an enum with all of your environments
+```swift
+enum Environment: String, Codable {
+    case development
+    case production
+}
+```
+
+Now you can customize your Service Provider that will react according to the running environment:
+```swift
+class ITunesServiceProvider: AMServiceProviderProtocol {
+    
+    private var environment: Environment
+    var host: String {
+        switch environment {
+        case .development : return "my.cool.dev.env.com"
+        case .production  : return "itunes.apple.com"
+        }
+    }
+    
+    var httpScheme: AMNetworkManager.SchemeKind {
+        switch environment {
+        case .development : return .http
+        case .production  : return .https
+        }
+    }
+    
+    init(environment: Environment) {
+        self.environment = environment
+    }
+    
+    ...
+```
+
+And upgrade your request:
+```swift
+class ITunesSearchRequest: AMBaseRequest<ITunesSearchResponse> {
+    
+    init(artist: String, limit: Int) {
+        let provider = ITunesServiceProvider(environment: .development)
+        super.init(serviceProvider: provider, endpoint: "/search")
+        
+        params = ["term": artist, "limit": limit]
+        mockedResponseFilename = "ITunesSearchMockedResponse"
+    }
+}
+```
+
+### Custom Validation Rules
 TBD
 
 ## Author
