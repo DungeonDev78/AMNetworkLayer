@@ -286,9 +286,26 @@ AMNetError.customUser(description: "User deleted",
 ```
 
 
-
 ### Certificate Pinning
-TBD
+Pinning certificates in AMNetworkLayer is extremely easy.
+
+Import your certificates in the main app bundle. Please **be sure to add it to your Target** otherwise the file will not be found and the app will crash at runtime. The certificate MUST exists and a catastrophic crash is the better way to let you notice this error.
+
+Create the certificate models for all of your certificates. Select the extension of the file with the enumerator. For different extension, just use the case with associated value *.other*:
+```swift
+let cert01 = AMCertificateModel(filename: "Cert001", fileExtension: .der)
+let cert02 = AMCertificateModel(filename: "Cert002", fileExtension: .crt)
+let cert03 = AMCertificateModel(filename: "Cert003", fileExtension: .der)
+let cert04 = AMCertificateModel(filename: "Cert004", fileExtension: .other(fileExtension: "der"))
+```
+
+Enable the pinning as soon as possible in your app lifecycle (in AppDelegate maybe):
+```swift
+AMNet.configurePinningWith(certificates:[cert01, cert02, cert03, cert04], isEnabled: true)
+```
+
+Sometimes you will need to disable the pinning, maybe your server do not support it on development environment. In that case use the *isEnabled* boolean.
+
 
 ## Tips'n'Tricks
 TBD
