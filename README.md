@@ -202,7 +202,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         let request = ITunesSearchRequest(artist: "Dream Theater", limit: 3)
-        AMNetworkManager.shared.performRequest(request: request) { (result) in
+        AMNet.performRequest(request: request) { (result) in
             switch result {
             case .success(let response):
                 print(response?.resultCount ?? 0)
@@ -218,10 +218,21 @@ class ViewController: UIViewController {
 ## Advanced Usage
 In this section wou will find additional info for an andavced use of the AMNetworkLayer library.
 
-### Mock Mode
-TBD
+**Note**: if you have red the documentation and you have already tried some services, you'll have noticed that you can use indifferently the two forms **AMNetworkManager.shared** or the shortest **AMNet**.
 
 ### Logs
+In the development phase of an app it's always a good thing to have all the logs under control. Of course the AMNetworkLayer is already *log-enabled*.
+In the release phase of an app it's always a good thing to disable all the logs. Needless to say that the AMNetworkLayer is already *log-disabled-ready*.
+
+Tho disable/enable the logs in any moment, just use:
+```swift
+AMNet.isVerbose = false // Disable all logs
+AMNet.isVerbose = true  // Enable all logs
+```
+
+By default this value is set to **true**.
+
+### Mock Mode
 TBD
 
 ### Certificate Pinning
