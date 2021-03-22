@@ -13,6 +13,7 @@ open class AMBaseRequest<Response> {
     // MARK: - Properties
     public var endpoint: String
     public var params = [String: Any]()
+    public var additionalHeaders = [String: String]()
     public var timeout = 60.0
     public var httpMethod: AMNetworkManager.HTTPMethodKind = .get
     
@@ -35,7 +36,7 @@ extension AMBaseRequest {
     /// Create the URLRequest using all the available infos
     /// - Returns: the created URLRequest
     func createURLRequest() -> URLRequest {
-        // MUST CRASH IF WRONG URL
+        // MUST CRASH IF MALFORMED URL
         let url = createURL()!
         var urlrequest = URLRequest(url: url)
         urlrequest.httpMethod = httpMethod.rawValue
@@ -48,7 +49,13 @@ extension AMBaseRequest {
         default: break
         }
         
+        // Add the common headers of the service provider
         for (key, value) in serviceProvider.createHTTPHeaders() {
+            urlrequest.setValue(value, forHTTPHeaderField: key)
+        }
+        
+        // Add the specific headers of the request
+        for (key, value) in additionalHeaders {
             urlrequest.setValue(value, forHTTPHeaderField: key)
         }
         
