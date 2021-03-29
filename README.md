@@ -14,7 +14,7 @@ Requirements:
 
 ### Swift Package
 ```swift
-.package(url: "https://github.com/DungeonDev78/AMNetworkLayer.git", .upToNextMajor(from: "0.2.0"))
+.package(url: "https://github.com/DungeonDev78/AMNetworkLayer.git", .upToNextMajor(from: "1.0.0"))
 ```
 
 ## Usage
