@@ -18,7 +18,6 @@ Requirements:
 ```
 
 ## Usage
-**Guide in development...**
 
 In order to perform a REST service, all you have to do is create the three main components needed by this library:
  1. **Service Provider**
