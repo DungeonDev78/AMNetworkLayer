@@ -34,12 +34,12 @@ public protocol AMServiceProviderProtocol: Codable {
     
     /// It's the url host of the service provider. 
     /// Could be different according to different environments for example.
-    /// If nededed implement an enum with the possible options using a computed var for host
+    /// If needed implement an enum with the possible options using a computed var for host
     var host: String { get }
     
     /// It's the  HTTP Scheme of the service provider. 
     /// Could be different according to different environments for example.
-    /// If nededed implement an enum with the possible options using a computed var for httpScheme
+    /// If needed implement an enum with the possible options using a computed var for httpScheme
     var httpScheme: AMNetworkManager.SchemeKind { get }
     
     /// Create the HTTP Headers of the service provider according to the rules of the server
@@ -98,7 +98,7 @@ If you plan to use the *mock mode* of the library, you have to specify the *mock
 It is an object that needs only to conform the **Codable** protocol.
 
 ## Putting it all together
-Let's create a small example to download musif info from iTunes Database
+Let's create a small example to download music info from iTunes Database
 
 **Service Provider**
 ```swift
@@ -217,9 +217,9 @@ class ViewController: UIViewController {
 ```
 
 ## Advanced Usage
-In this section wou will find additional info for an andavced use of the AMNetworkLayer library.
+In this section would will find additional info for an andavced use of the AMNetworkLayer library.
 
-**Note**: if you have red the documentation and you have already tried some services, you'll have noticed that you can use indifferently the two forms **AMNetworkManager.shared** or the shortest **AMNet**.
+**Note**: if you have read the documentation and you have already tried some services, you'll have noticed that you can use indifferently the two forms **AMNetworkManager.shared** or the shortest **AMNet**.
 
 
 ### Logs
@@ -238,7 +238,7 @@ By default this value is set to **true**.
 ### Mock Mode
 During the development phase of an app, your back-end server could be down for many reasons but you still have to work on your application. In this eventuality a mock mode of your services would be helpful. Of course AMNetworkLayer has it.
 
-In order to use it you need to follow these semple steps:
+In order to use it you need to follow these simple steps:
 
 Create a JSON file with the expected response and add it on your project. When you create the file in Xcode, or you are importing it in your project, please **be sure to add it to your Target** otherwise the file will not be found and an assertion will arise at runtime.
 
@@ -309,7 +309,7 @@ Sometimes you will need to disable the pinning, maybe your server do not support
 ## Tips'n'Tricks
 
 ### Environments
-With AMNetworkLayer you can esaly handle multi environments.
+With AMNetworkLayer you can easily handle multi environments.
 
 Create an enum with all of your environments
 ```swift
@@ -377,7 +377,7 @@ struct ITunesSearchResponse: Codable, ITunesSearchResponseProtocol {
 }
 ```
 
-And then change the omplementation of your Service Provider Protocol:
+And then change the implementation of your Service Provider Protocol:
 ```swift
 func parseAndValidate<U>(_ data: Data,
                              responseType: U.Type,
